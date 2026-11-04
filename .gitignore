@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+
+# large experiment outputs (regenerate with scripts/run_pipeline.sh)
+experiments/tune_config/**/searches.csv
+experiments/results/**/episodes.csv
+
+# logs
+experiments/logs/
+experiments/*.out
+log/

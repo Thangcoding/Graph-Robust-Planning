@@ -1,0 +1,69 @@
+{
+  "env": "frozen_lake",
+  "algo": "gs-power-uct",
+  "num_simulations": 700,
+  "thetas_plan": [
+    0.1,
+    0.2,
+    0.3,
+    0.4
+  ],
+  "thetas_exec": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8
+  ],
+  "top": [
+    {
+      "rank": 1,
+      "params": {
+        "num_simulations": 700,
+        "exploration_const": 0.5,
+        "p": Infinity,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.04395607491076275,
+      "regret_se": 0.0006920214358666085,
+      "n_searches": 3180
+    },
+    {
+      "rank": 2,
+      "params": {
+        "num_simulations": 700,
+        "exploration_const": 1.0,
+        "p": Infinity,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.044430458407053425,
+      "regret_se": 0.0009777163119487084,
+      "n_searches": 3180
+    },
+    {
+      "rank": 3,
+      "params": {
+        "num_simulations": 700,
+        "exploration_const": 0.5,
+        "p": 32.0,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.04490128430831352,
+      "regret_se": 0.0009579304112672566,
+      "n_searches": 3180
+    }
+  ]
+}

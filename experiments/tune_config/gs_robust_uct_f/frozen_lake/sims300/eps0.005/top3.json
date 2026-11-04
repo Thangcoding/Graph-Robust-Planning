@@ -1,0 +1,75 @@
+{
+  "env": "frozen_lake",
+  "algo": "gsf-robust-uct",
+  "num_simulations": 300,
+  "thetas_plan": [
+    0.1,
+    0.2,
+    0.3,
+    0.4
+  ],
+  "thetas_exec": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8
+  ],
+  "top": [
+    {
+      "rank": 1,
+      "params": {
+        "num_simulations": 300,
+        "exploration_const": 2.0,
+        "p": Infinity,
+        "uncertainty_budget": 0.005,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited",
+        "uncertainty_type": "tv"
+      },
+      "mean_regret": 0.032351230126099986,
+      "regret_se": 0.001065625459052139,
+      "n_searches": 3180
+    },
+    {
+      "rank": 2,
+      "params": {
+        "num_simulations": 300,
+        "exploration_const": 1.0,
+        "p": Infinity,
+        "uncertainty_budget": 0.005,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited",
+        "uncertainty_type": "tv"
+      },
+      "mean_regret": 0.03524384589117491,
+      "regret_se": 0.0010144750235620494,
+      "n_searches": 3180
+    },
+    {
+      "rank": 3,
+      "params": {
+        "num_simulations": 300,
+        "exploration_const": 2.0,
+        "p": 32.0,
+        "uncertainty_budget": 0.005,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited",
+        "uncertainty_type": "tv"
+      },
+      "mean_regret": 0.035635653042748544,
+      "regret_se": 0.0011963645020208117,
+      "n_searches": 3180
+    }
+  ]
+}

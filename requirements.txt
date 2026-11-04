@@ -1,0 +1,6 @@
+numpy>=1.26
+gymnasium>=1.0
+matplotlib>=3.8
+pandas>=2.1
+ipykernel>=6.29
+pytest>=8.0
