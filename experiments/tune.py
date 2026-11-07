@@ -1,28 +1,4 @@
-"""Tune the hyper-parameters of one planner on one environment for planning under model mismatch, by the root-action
-regret on a fixed set of states.
 
-    python experiments/tune.py --env gambler --algo uct
-    python experiments/tune.py --env frozen_lake --algo robust-uct --sims 400
-
-One search = put the nominal model theta_plan in state s, run num_simulations simulations, take the root action a.
-The action is scored in every real env theta_exec (the same ones run.py executes in) with the exact optimal Q* of
-that env (ordinary value iteration, value_iteration.py):
-    regret_true(s, a) = max_b Q*_exec(s, b) - Q*_exec(s, a)
-The states are every non-terminal state where the actions really differ (Q* not flat) in at least one theta_exec.
-Every config is scored on the same states with the same seeds. A config's score is its mean regret on each
-(theta_plan, theta_exec) pair, averaged over the pairs, so the top config is the one that plans best on a wrong model.
-All configs are ranked together, the uncertainty_budget of a robust planner included.
-No episode is played here: the results in the real envs are measured by run.py.
-
-Two rounds: screen (every config, SCREEN_SEEDS), then refine (the REFINE_TOP best on new REFINE_SEEDS, ranked on both
-rounds pooled).
-
-Output, in experiments/tune_config/<algo>/<env>/sims<N>/ (algo folder from ALGO_DIRS, e.g. st_power_uct):
-    searches.csv  one row per search and theta_exec: config_id, round, seed, theta_plan, theta_exec, state,
-                  planner parameters, action, regret_true
-    results.csv   one row per config: parameters, mean_regret, regret_se, n_searches, rank
-    top3.json     the TOP_K best configs, with their parameters (run.py runs the rank-1 one)
-"""
 from __future__ import annotations
 
 import argparse
@@ -38,7 +14,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.algorithms import PLANNERS, make_planner  # noqa: E402
-from src.envs import FrozenLake, Gambler  # noqa: E402
+from src.envs import CliffWalking, FrozenLake, Gambler  # noqa: E402
 from value_iteration import solve  # noqa: E402
 
 OUT = os.path.join(ROOT, "experiments", "tune_config")
@@ -57,12 +33,13 @@ def result_dir(root: str, algo: str, env: str, sims: int, eps: float | None = No
 # ---------------------------------------------------------------- settings
 
 # env name -> (class, name of its model parameter theta)
-ENVS = {"gambler": (Gambler, "p_h"), "frozen_lake": (FrozenLake, "slip_rate")}
+ENVS = {"gambler": (Gambler, "p_h"), "frozen_lake": (FrozenLake, "slip_rate"), "cliffwalking": (CliffWalking, "slip_rate")}
 # nominal models the planners plan on, and the real envs their actions are scored in (run.py uses the same ones)
-THETAS = {"gambler": [0.4, 0.6, 0.8], "frozen_lake": [0.1, 0.2, 0.3, 0.4]}
+THETAS = {"gambler": [0.4, 0.6, 0.8], "frozen_lake": [0.1, 0.2, 0.3, 0.4], "cliffwalking": [0.1, 0.2, 0.3, 0.4]}
 EXEC_THETAS = {
     "gambler": [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
     "frozen_lake": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
+    "cliffwalking": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
 }
 
 # values tried for the hyper-parameters a planner has; the others are not searched

@@ -6,7 +6,7 @@ import gymnasium as gym
 import numpy as np 
 import math 
 
-from .robust_uct import compute_robust_reward, compute_robust_value, tv_worst_case
+from .robust_uct import compute_robust_reward_counts, compute_robust_value
 from ..registry import register_planner
 from ..base import Action, BasePlanner, BasePlannerConfig, Node, PathStep
 
@@ -66,14 +66,9 @@ class GSFRobustUCT(BasePlanner):
             action.R[reward] = action.R.get(reward, 0) + 1   # update reward sample count
 
             # robust reward over the empirical reward distribution
-            rewards = list(action.R)
-            if self.config.uncertainty_type == 'tv':
-                robust_reward = tv_worst_case(rewards, [action.R[r] / action.T for r in rewards],
-                                              self.config.uncertainty_budget)
-            else:
-                robust_reward = compute_robust_reward([r for r in rewards for _ in range(action.R[r])],
-                                                      self.config.uncertainty_budget,
-                                                      self.config.uncertainty_type)
+            robust_reward = compute_robust_reward_counts(action.R,
+                                                         self.config.uncertainty_budget,
+                                                         self.config.uncertainty_type)
 
             # robust value 
             # P(s'|s,a) = T(s,a,s') / T(s,a); skip children registered by get_or_create but not backed up yet
@@ -84,10 +79,8 @@ class GSFRobustUCT(BasePlanner):
 
             assert len(probs) == len(v_values)
 
-            if self.config.uncertainty_type == 'tv':
-                robust_value = tv_worst_case(v_values, probs, self.config.uncertainty_budget)
-            else:
-                robust_value = compute_robust_value(v_values,
+
+            robust_value = compute_robust_value(v_values,
                                                     probs,
                                                     self.config.uncertainty_type,
                                                     self.config.uncertainty_budget)

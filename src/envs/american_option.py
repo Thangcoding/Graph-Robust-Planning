@@ -20,7 +20,6 @@ class AmericanOption(gym.Env):
         self.time_limit = n_steps + 1
         self.t = 0
 
-        # nodes (t, u) numbered t (t + 1) / 2 + u, then one terminal state for exercised or expired
         self.num_nodes = (n_steps + 1) * (n_steps + 2) // 2
         self.done = self.num_nodes
         self.num_states = self.num_nodes + 1
@@ -45,7 +44,7 @@ class AmericanOption(gym.Env):
         return self.s0 * self.up ** (2 * u - t)
 
     def payoff(self, s):
-        return max(self.strike - self.price(s), 0.0) / self.strike
+        return max(self.strike - self.price(s), 0.0) / self.strike 
 
     def is_terminal(self, s):
         return s == self.done

@@ -1,0 +1,66 @@
+{
+  "env": "cliffwalking",
+  "algo": "uct",
+  "num_simulations": 500,
+  "thetas_plan": [
+    0.1,
+    0.2,
+    0.3,
+    0.4
+  ],
+  "thetas_exec": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8
+  ],
+  "top": [
+    {
+      "rank": 1,
+      "params": {
+        "num_simulations": 500,
+        "exploration_const": 0.1,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.0359098729061806,
+      "regret_se": 0.0015301767308396352,
+      "n_searches": 2220
+    },
+    {
+      "rank": 2,
+      "params": {
+        "num_simulations": 500,
+        "exploration_const": 0.25,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.03887393117185971,
+      "regret_se": 0.0010375148184932877,
+      "n_searches": 2220
+    },
+    {
+      "rank": 3,
+      "params": {
+        "num_simulations": 500,
+        "exploration_const": 2.0,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.03937928343937781,
+      "regret_se": 0.0019263479029067623,
+      "n_searches": 2220
+    }
+  ]
+}

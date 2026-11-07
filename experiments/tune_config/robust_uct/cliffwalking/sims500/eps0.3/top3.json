@@ -1,0 +1,75 @@
+{
+  "env": "cliffwalking",
+  "algo": "robust-uct",
+  "num_simulations": 500,
+  "thetas_plan": [
+    0.1,
+    0.2,
+    0.3,
+    0.4
+  ],
+  "thetas_exec": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8
+  ],
+  "top": [
+    {
+      "rank": 1,
+      "params": {
+        "num_simulations": 500,
+        "exploration_const": 2.0,
+        "p": 16.0,
+        "uncertainty_budget": 0.3,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited",
+        "uncertainty_type": "tv"
+      },
+      "mean_regret": 0.03861384505017365,
+      "regret_se": 0.0014415461695160372,
+      "n_searches": 2220
+    },
+    {
+      "rank": 2,
+      "params": {
+        "num_simulations": 500,
+        "exploration_const": 2.0,
+        "p": 8.0,
+        "uncertainty_budget": 0.3,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited",
+        "uncertainty_type": "tv"
+      },
+      "mean_regret": 0.03948952472326979,
+      "regret_se": 0.0016248147022826411,
+      "n_searches": 2220
+    },
+    {
+      "rank": 3,
+      "params": {
+        "num_simulations": 500,
+        "exploration_const": 2.0,
+        "p": 32.0,
+        "uncertainty_budget": 0.3,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited",
+        "uncertainty_type": "tv"
+      },
+      "mean_regret": 0.03964148556713646,
+      "regret_se": 0.0015927576427099941,
+      "n_searches": 2220
+    }
+  ]
+}

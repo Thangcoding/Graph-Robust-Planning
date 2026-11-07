@@ -12,7 +12,7 @@ from ..registry import register_planner
 
 def tv_worst_case(values: list[float], probs: list[float], budget: float) -> float:
     ''' TV worst case of a few values: move up to `budget` mass from the highest values to the lowest one
-    (same result as compute_robust_value with 'tv', in pure python: numpy is slower on 2-4 values) '''
+    (pure python: numpy is slower on 2-4 values) '''
     order = sorted(range(len(values)), key=values.__getitem__)
     lowest = values[order[0]]
     result, budget_remaining = 0.0, budget
@@ -73,11 +73,8 @@ class RobustUCT(BasePlanner):
 
             # robust reward over the empirical reward distribution
             rewards = list(action.R)
-            if self.config.uncertainty_type == 'tv':
-                robust_reward = tv_worst_case(rewards, [action.R[r] / action.T for r in rewards],
-                                              self.config.uncertainty_budget)
-            else:
-                robust_reward = compute_robust_reward([r for r in rewards for _ in range(action.R[r])],
+   
+            robust_reward = compute_robust_reward([r for r in rewards for _ in range(action.R[r])],
                                                       self.config.uncertainty_budget,
                                                       self.config.uncertainty_type)
 
@@ -90,10 +87,8 @@ class RobustUCT(BasePlanner):
 
             assert len(probs) == len(v_values)
 
-            if self.config.uncertainty_type == 'tv':
-                robust_value = tv_worst_case(v_values, probs, self.config.uncertainty_budget)
-            else:
-                robust_value = compute_robust_value(v_values,
+ 
+            robust_value = compute_robust_value(v_values,
                                                     probs,
                                                     self.config.uncertainty_type,
                                                     self.config.uncertainty_budget)
@@ -167,16 +162,23 @@ def compute_robust_reward(reward_samples: list[float],
         std = np.std(rewards) if n > 1 else 0.0
         return mean - math.sqrt(epsilon) * std
 
-    elif uncertainty_type == 'wasserstein': 
-        sorted_rewards = np.sort(rewards)
-        cdf = np.arange(1, n + 1) / n
-        transport_cost = np.sum(np.abs(np.diff(sorted_rewards)) * cdf[:-1])
-        return np.mean(rewards) - epsilon * transport_cost
 
-    else: 
-        raise ValueError(
-            f"Unknown uncertainty type: {uncertainty_type}"
-        )
+def compute_robust_reward_counts(reward_counts: dict[float, int],
+                                 uncertainty_budget: float = 2.0,
+                                 uncertainty_type: str = 'tv') -> float:
+    ''' compute_robust_reward from the samples counted by value, {reward: count}: the cost depends on the number of
+    different rewards, not on the number of samples '''
+    if uncertainty_type != 'tv':
+        return compute_robust_reward([r for r, count in reward_counts.items() for _ in range(count)],
+                                     uncertainty_budget, uncertainty_type)
+    if len(reward_counts) == 0:
+        return 0.0
+
+    n = sum(reward_counts.values())
+    rewards = list(reward_counts)
+    probs = [count / n for count in reward_counts.values()]
+    return tv_worst_case(rewards, probs, uncertainty_budget)
+
 
 def compute_robust_value(v_values : list[float], 
                          probs: list[float],
@@ -186,33 +188,14 @@ def compute_robust_value(v_values : list[float],
     if len(v_values) == 0 or len(probs) == 0: 
         return 0.0 
 
+    if uncertainty_type == 'tv':
+        return tv_worst_case(v_values, probs, uncertainty_budget)
+
     v = np.array(v_values)
     q = np.array(probs)
     budget = uncertainty_budget
 
-    if uncertainty_type == 'tv': 
-        # move up to `budget` probability mass from the highest values to the lowest one
-        sorted_idx = np.argsort(v)
-        v_sorted = v[sorted_idx]
-        q_sorted = q[sorted_idx]
-        
-        budget_remaining = uncertainty_budget
-        result = 0.0
-        
-        for i in reversed(range(len(v_sorted))):
-            movable_mass = min(q_sorted[i], budget_remaining)
-        
-            result += v_sorted[i] * (q_sorted[i] - movable_mass)
-            result += v_sorted[0] * movable_mass
-        
-            budget_remaining -= movable_mass
-            if budget_remaining <= 0:
-                # budget used up: the lower values (not processed yet) keep their mass
-                result += v_sorted[:i] @ q_sorted[:i]
-                break
-        return float(result)
-
-    elif uncertainty_type == "chi2": 
+    if uncertainty_type == "chi2": 
         sorted_idx = np.argsort(v)
         v_sorted = v[sorted_idx]
         q_sorted = q[sorted_idx]
@@ -224,20 +207,6 @@ def compute_robust_value(v_values : list[float],
         ball_radius = budget * std
 
         return mean - ball_radius
-
-    elif uncertainty_type == 'wasserstein': 
-        sorted_idx = np.argsort(v)
-        v_sorted = v[sorted_idx] 
-        q_sorted = q[sorted_idx] 
-
-
-        Q = np.cumsum(q_sorted)
-
-        cost = 0.0
-        for i in range(len(v_sorted) - 1):
-            cost += abs(v_sorted[i + 1] - v_sorted[i]) * Q[i]
-
-        return np.dot(q, v) - budget * cost
 
     else: 
         raise ValueError(f'Unknown uncertainty type: {uncertainty_type}')

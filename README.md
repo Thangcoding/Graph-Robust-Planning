@@ -23,7 +23,6 @@ Check the installation:
 python -c "import src.algorithms, src.envs; print('ok')"
 ```
 
-
 ```bash
 python -m ipykernel install --user --name robustGraph --display-name "Python (robustGraph)"
 ```
@@ -89,7 +88,6 @@ ENVS=frozen_lake ALGOS=gsf-robust-uct SIMS="100 1000" EPS="0.2" bash scripts/run
 Then open `experiments/result_analysis.ipynb` to analyse the results. Details on the parameter grids, the result file columns and caveats are in [`experiments/README.md`](experiments/README.md).
 
 ## Main results (11/2026)
-
 - **FrozenLake:** GSF Robust UCT is the best method at every N, in both regret and success rate. The robust backup only helps once states are merged: on a plain tree it is worse than the non-robust backup.
 - **Gambler:** GS Robust UCT is the most stable method. GSF Robust UCT gets worse when `θ_plan = 0.4` and the real game is more favourable than the model.
 

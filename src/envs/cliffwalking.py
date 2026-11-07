@@ -76,9 +76,13 @@ class CliffWalking(gym.Env):
         return self.s, {}
 
     def step(self, action):
-        probs, next_states = zip(*self.P[self.s][action])
-        i = self.np_random.choice(len(probs), p=probs)
-        self.s = int(next_states[i])
+        # inverse CDF by hand: Generator.choice(p=...) takes most of the planning time
+        u = self.np_random.random()
+        for prob, next_state in self.P[self.s][action]:
+            u -= prob
+            if u < 0:
+                break
+        self.s = next_state
         self.t += 1
 
         reward = 1.0 if self.s == self.goal else 0.0

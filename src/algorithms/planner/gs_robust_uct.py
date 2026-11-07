@@ -9,7 +9,7 @@ import gymnasium as gym
 import numpy as np 
 import math 
 
-from .robust_uct import compute_robust_reward , compute_robust_value
+from .robust_uct import compute_robust_reward_counts , compute_robust_value
 from ..base import Action, BasePlanner, BasePlannerConfig, Node, PathStep
 from ..registry import register_planner 
 
@@ -29,8 +29,8 @@ class GSRobustUCT(BasePlanner):
         return (parent.depth + 1, s_next)
 
     def expand(self, node: Node, env: gym.Env) -> None:
-            # R keeps every reward sample of (s, a) for the robust reward
-            node.actions = {a: Action(R=[]) for a in range(env.action_space.n)}
+            # R counts the reward samples of (s, a) by value, {reward: count}, for the robust reward
+            node.actions = {a: Action(R={}) for a in range(env.action_space.n)}
     
     def exploration_bonus(self, node: Node, a: int) -> float:
         ''' 
@@ -59,12 +59,12 @@ class GSRobustUCT(BasePlanner):
             action = node.actions[a]
             action.T += 1                # T(s, a)
             action.next[child] += 1      # T(s, a, s')
-            action.R.append(reward)      # update reward sample 
+            action.R[reward] = action.R.get(reward, 0) + 1   # update reward sample count
 
             # robust reward 
-            robust_reward = compute_robust_reward(action.R, 
-                                                self.config.uncertainty_budget, 
-                                                self.config.uncertainty_type)
+            robust_reward = compute_robust_reward_counts(action.R,
+                                                         self.config.uncertainty_budget,
+                                                         self.config.uncertainty_type)
             
             # robust value 
             # P(s'|s,a) = T(s,a,s') / T(s,a); skip children registered by get_or_create but not backed up yet

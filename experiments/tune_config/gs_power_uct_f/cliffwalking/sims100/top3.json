@@ -1,0 +1,69 @@
+{
+  "env": "cliffwalking",
+  "algo": "gsf-power-uct",
+  "num_simulations": 100,
+  "thetas_plan": [
+    0.1,
+    0.2,
+    0.3,
+    0.4
+  ],
+  "thetas_exec": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8
+  ],
+  "top": [
+    {
+      "rank": 1,
+      "params": {
+        "num_simulations": 100,
+        "exploration_const": 0.5,
+        "p": Infinity,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.028911967295770575,
+      "regret_se": 0.0010698413162069566,
+      "n_searches": 2220
+    },
+    {
+      "rank": 2,
+      "params": {
+        "num_simulations": 100,
+        "exploration_const": 0.5,
+        "p": 32.0,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.029115479071603414,
+      "regret_se": 0.0013282497857516934,
+      "n_searches": 2220
+    },
+    {
+      "rank": 3,
+      "params": {
+        "num_simulations": 100,
+        "exploration_const": 1.0,
+        "p": Infinity,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.030187743802858998,
+      "regret_se": 0.000900651378484123,
+      "n_searches": 2220
+    }
+  ]
+}
