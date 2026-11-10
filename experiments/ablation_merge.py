@@ -18,14 +18,17 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import run  # noqa: E402
 import tune  # noqa: E402
-from src.envs import AmericanOption  # noqa: E402
+from src.envs import AmericanOption, Inventory  # noqa: E402
 
 # at module level: the worker processes import this file again, they would not see a change made in main()
 tune.ENVS["american_option"] = (AmericanOption, "p_up")
+tune.ENVS["inventory"] = (Inventory, "lam")
 
 THETA_PLAN = 0.5
 EPS = 0.5
 THETA_EXEC = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+# envs whose theta is not a probability: (theta_plan, theta_exec); inventory theta = Poisson demand rate lam
+THETAS_OF = {"inventory": (10.0, [6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0])}
 # algo -> eps
 METHODS = {"robust-uct": EPS, "gs-power-uct": None, "gsf-power-uct": None, "gs-robust-uct": EPS, "gsf-robust-uct": EPS}
 
@@ -36,6 +39,8 @@ def main() -> None:
     parser.add_argument("--algos", nargs="+", default=list(METHODS), choices=list(METHODS))
     parser.add_argument("--sims", type=int, default=2000)
     parser.add_argument("--eps", type=float, default=EPS, help="uncertainty budget of the robust planners")
+    parser.add_argument("--exec", nargs="+", type=float, default=None, dest="theta_exec",
+                        help="theta_exec grid (default: THETA_EXEC, or THETAS_OF for the env)")
     parser.add_argument("--tune-only", action="store_true", help="stop after tune: the regret, no episodes")
     parser.add_argument("--workers", type=int, default=os.cpu_count())
     parser.add_argument("--out", default=os.path.join(tune.ROOT, "experiments", "results", "experiment_1"))
@@ -44,8 +49,10 @@ def main() -> None:
     tune.OUT, run.OUT = os.path.join(args.out, "tune"), os.path.join(args.out, "run")
 
     for env in args.envs:
-        tune.THETAS[env] = [THETA_PLAN]
-        tune.EXEC_THETAS[env] = THETA_EXEC
+        theta_plan, theta_exec = THETAS_OF.get(env, (THETA_PLAN, THETA_EXEC))
+        theta_exec = args.theta_exec or theta_exec
+        tune.THETAS[env] = [theta_plan]
+        tune.EXEC_THETAS[env] = theta_exec
         for algo in args.algos:
             eps = None if METHODS[algo] is None else args.eps
             print(f"================ {env} | {algo} | sims {args.sims} | eps {eps} ================", flush=True)

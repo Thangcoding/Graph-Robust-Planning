@@ -1,0 +1,65 @@
+{
+  "env": "frozen_lake",
+  "algo": "gs-power-uct",
+  "num_simulations": 100,
+  "thetas_plan": [
+    0.5
+  ],
+  "thetas_exec": [
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8
+  ],
+  "top": [
+    {
+      "rank": 1,
+      "params": {
+        "num_simulations": 100,
+        "exploration_const": 1.0,
+        "p": Infinity,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.05062113574997004,
+      "regret_se": 0.0026471282770491322,
+      "n_searches": 795
+    },
+    {
+      "rank": 2,
+      "params": {
+        "num_simulations": 100,
+        "exploration_const": 0.25,
+        "p": 16.0,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.051478847387973335,
+      "regret_se": 0.0018648109098478253,
+      "n_searches": 795
+    },
+    {
+      "rank": 3,
+      "params": {
+        "num_simulations": 100,
+        "exploration_const": 1.0,
+        "p": 16.0,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.0514901614750632,
+      "regret_se": 0.0025606155941031695,
+      "n_searches": 795
+    }
+  ]
+}
