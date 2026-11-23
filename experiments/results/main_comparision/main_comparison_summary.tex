@@ -1,0 +1,21 @@
+% Main comparison, one-paragraph summary. Tables: main_comparison_{frozen_lake,cliffwalking,gambler}.tex (make_table.py).
+\paragraph{Main comparison.}
+We compare the seven planners under model mismatch, planning with $\theta_{\text{plan}}$ and executing with
+$\theta_{\text{exec}}$, with $N = 2000$ simulations and a TV budget $\epsilon = 0.2$ for the robust planners
+(Tables~\ref{tab:main-frozen-lake}, \ref{tab:main-cliffwalking} and \ref{tab:main-gambler}). On the two grid worlds,
+the robust graph planners are the best methods for almost every pair $(\theta_{\text{plan}}, \theta_{\text{exec}})$:
+GS-Robust-UCT and GSF-Robust-UCT come first, the nominal graph planners second, and the three tree planners last. The
+gap widens as $\theta_{\text{exec}}$ grows, especially on CliffWalking, where the reward of the robust graph planners
+decreases only slowly with the slip rate while that of every nominal planner falls sharply; neither merge dominates the
+other. In contrast, Robust-UCT, which applies the same robust
+backup on a tree, is no better than UCT and Power-UCT and is clearly
+worse when $\theta_{\text{exec}}$ is small: without merging, each node receives too few
+samples to estimate the next-state distribution on which the worst case is computed, so the robust backup only becomes
+effective when samples are pooled in a graph. Gambler shows the limits of a fixed budget. When the planning model is
+favourable ($\theta_{\text{plan}} \ge 0.6$), the nominal planners follow the timid strategy and lose almost every
+episode when the coin turns out to be unfavourable, whereas GSF-Robust-UCT switches to the bold strategy and is the best
+planner for $p_h < 0.5$, at the price of a lower reward when the coin is favourable. GS-Robust-UCT makes this switch
+only partially, and at $\theta_{\text{plan}} = 0.2$ the budget $\epsilon = 0.2$ is so large that every robust value is
+zero, so the robust planners there cannot rank the actions. Overall, combining the robust backup with state merging
+gives the most reliable planner under model mismatch, and the benefit is largest when the execution environment is
+much noisier than the planning model.

@@ -1,0 +1,17 @@
+% Experiment 2 (simulation budget), one-paragraph summary. Figure: exp2_mean_reward.pdf (plot_exp2.py).
+\paragraph{Experiment 2: simulation budget.}
+To measure sample efficiency, we run the same five planners with simulation budgets $N$ from 100 to 2000 and report
+the mean reward averaged over $\theta_{\text{exec}}$ on FrozenLake, CliffWalking and Gambler
+(Figure~\ref{fig:exp2}). On the two grid worlds, Robust-UCT stays far below all graph planners at every budget and
+improves only slowly with $N$: on a tree, each node sees only the simulations that follow its own history, so even a
+large budget leaves the worst-case estimate of each node with few samples. The graph planners improve much faster
+because every simulation that reaches a state updates the same node, so the samples of different trajectories are
+reused. The benefit of this reuse is largest at small budgets and for the most aggressive merging: GSF-Robust-UCT,
+which merges states across depths, is already the best planner with the smallest budgets, while GS-Robust-UCT, which
+merges only within a depth, needs a larger budget to catch up with it on FrozenLake and stays below it on CliffWalking.
+On CliffWalking, the robust graph planners also keep improving with $N$ after the nominal graph planners level off,
+since the robust backup needs accurate next-state distributions, which is exactly what pooled samples provide. On Gambler, the average
+over $\theta_{\text{exec}}$ is nearly identical for all planners at every budget, because their curves are close to
+symmetric around $p_h = 0.5$, so this metric does not separate them there. Overall, sample reuse through the graph
+makes the robust planners markedly more sample-efficient than the tree-based Robust-UCT, and full merging gives the
+largest gain when the simulation budget is small.

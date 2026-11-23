@@ -68,7 +68,7 @@
         "uncertainty_type": "tv"
       },
       "mean_regret": 0.0526228293634253,
-      "regret_se": 0.0009173340154136573,
+      "regret_se": 0.0009173340154136572,
       "n_searches": 3180
     }
   ]

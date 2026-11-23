@@ -62,8 +62,8 @@ def main() -> None:
             else:
                 searches, results = tune.tune(env, algo, args.sims, args.workers, eps)
                 print("tuned", tune.save(env, algo, args.sims, searches, results, eps), flush=True)
-                print(results.sort_values("rank").head(3)[["exploration_const", "p", "mean_regret", "regret_se"]]
-                      .round(5).to_string(index=False), flush=True)
+                cols = [c for c in ["exploration_const", "p", "mean_regret", "regret_se"] if c in results]  # uct: no p
+                print(results.sort_values("rank").head(3)[cols].round(5).to_string(index=False), flush=True)
 
             if args.tune_only:
                 continue

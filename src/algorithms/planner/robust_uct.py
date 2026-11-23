@@ -4,11 +4,10 @@ import math
 from dataclasses import dataclass 
 
 import gymnasium as gym 
-import numpy as np 
+import numpy as np      
 
-from ..base import Action, BasePlanner, BasePlannerConfig, Node, PathStep
+from ..base import Action, BasePlanner, BasePlannerConfig, Node, PathStep 
 from ..registry import register_planner
-
 
 def tv_worst_case(values: list[float], probs: list[float], budget: float) -> float:
     ''' TV worst case of a few values: move up to `budget` mass from the highest values to the lowest one
@@ -21,7 +20,6 @@ def tv_worst_case(values: list[float], probs: list[float], budget: float) -> flo
         result += values[i] * (probs[i] - movable_mass) + lowest * movable_mass
         budget_remaining -= movable_mass
     return result
-
 
 @dataclass
 class RobustUCTPlannerConfig(BasePlannerConfig): 

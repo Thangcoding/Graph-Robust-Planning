@@ -3,7 +3,7 @@
   "algo": "gs-power-uct",
   "num_simulations": 2000,
   "thetas_plan": [
-    0.5
+    0.1
   ],
   "thetas_exec": [
     0.1,
@@ -20,30 +20,30 @@
       "rank": 1,
       "params": {
         "num_simulations": 2000,
-        "exploration_const": 0.25,
+        "exploration_const": 2.0,
         "p": Infinity,
         "gamma": 0.99,
         "rollout_depth": 100,
         "max_depth": 50,
         "final_action": "most_visited"
       },
-      "mean_regret": 0.031773660874746146,
-      "regret_se": 0.0019233271374930457,
+      "mean_regret": 0.03722243671832164,
+      "regret_se": 0.0014365849631542925,
       "n_searches": 795
     },
     {
       "rank": 2,
       "params": {
         "num_simulations": 2000,
-        "exploration_const": 0.25,
-        "p": 32.0,
+        "exploration_const": 1.0,
+        "p": Infinity,
         "gamma": 0.99,
         "rollout_depth": 100,
         "max_depth": 50,
         "final_action": "most_visited"
       },
-      "mean_regret": 0.03220259402391719,
-      "regret_se": 0.002076037895978118,
+      "mean_regret": 0.03812998352474845,
+      "regret_se": 0.0018827507675406535,
       "n_searches": 795
     },
     {
@@ -57,8 +57,8 @@
         "max_depth": 50,
         "final_action": "most_visited"
       },
-      "mean_regret": 0.03263521879532952,
-      "regret_se": 0.0020158803471130946,
+      "mean_regret": 0.038437678957758174,
+      "regret_se": 0.001880912034827544,
       "n_searches": 795
     }
   ]

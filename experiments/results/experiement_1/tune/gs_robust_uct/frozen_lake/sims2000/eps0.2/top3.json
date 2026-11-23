@@ -3,7 +3,7 @@
   "algo": "gs-robust-uct",
   "num_simulations": 2000,
   "thetas_plan": [
-    0.5
+    0.1
   ],
   "thetas_exec": [
     0.1,
@@ -21,7 +21,7 @@
       "params": {
         "num_simulations": 2000,
         "exploration_const": 2.0,
-        "p": 16.0,
+        "p": 32.0,
         "uncertainty_budget": 0.2,
         "gamma": 0.99,
         "rollout_depth": 100,
@@ -29,8 +29,8 @@
         "final_action": "most_visited",
         "uncertainty_type": "tv"
       },
-      "mean_regret": 0.029709013759043577,
-      "regret_se": 0.0017448568106423362,
+      "mean_regret": 0.029857310658629132,
+      "regret_se": 0.0020013088901048486,
       "n_searches": 795
     },
     {
@@ -46,8 +46,8 @@
         "final_action": "most_visited",
         "uncertainty_type": "tv"
       },
-      "mean_regret": 0.02998719300959611,
-      "regret_se": 0.0017016994324697942,
+      "mean_regret": 0.031412544944706904,
+      "regret_se": 0.0018182825720242531,
       "n_searches": 795
     },
     {
@@ -55,7 +55,7 @@
       "params": {
         "num_simulations": 2000,
         "exploration_const": 2.0,
-        "p": 32.0,
+        "p": 16.0,
         "uncertainty_budget": 0.2,
         "gamma": 0.99,
         "rollout_depth": 100,
@@ -63,8 +63,8 @@
         "final_action": "most_visited",
         "uncertainty_type": "tv"
       },
-      "mean_regret": 0.030262154406651684,
-      "regret_se": 0.001754656692194476,
+      "mean_regret": 0.031931185578361165,
+      "regret_se": 0.002066607164938003,
       "n_searches": 795
     }
   ]

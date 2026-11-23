@@ -3,7 +3,7 @@
   "algo": "robust-uct",
   "num_simulations": 2000,
   "thetas_plan": [
-    0.5
+    0.1
   ],
   "thetas_exec": [
     0.1,
@@ -21,6 +21,23 @@
       "params": {
         "num_simulations": 2000,
         "exploration_const": 2.0,
+        "p": 1.0,
+        "uncertainty_budget": 0.2,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited",
+        "uncertainty_type": "tv"
+      },
+      "mean_regret": 0.03639701183682914,
+      "regret_se": 0.002236189841400822,
+      "n_searches": 555
+    },
+    {
+      "rank": 2,
+      "params": {
+        "num_simulations": 2000,
+        "exploration_const": 2.0,
         "p": Infinity,
         "uncertainty_budget": 0.2,
         "gamma": 0.99,
@@ -29,25 +46,8 @@
         "final_action": "most_visited",
         "uncertainty_type": "tv"
       },
-      "mean_regret": 0.02323510953867533,
-      "regret_se": 0.001595577539209334,
-      "n_searches": 555
-    },
-    {
-      "rank": 2,
-      "params": {
-        "num_simulations": 2000,
-        "exploration_const": 1.0,
-        "p": 16.0,
-        "uncertainty_budget": 0.2,
-        "gamma": 0.99,
-        "rollout_depth": 100,
-        "max_depth": 50,
-        "final_action": "most_visited",
-        "uncertainty_type": "tv"
-      },
-      "mean_regret": 0.02550873522006561,
-      "regret_se": 0.0017270402605548032,
+      "mean_regret": 0.037476725245392736,
+      "regret_se": 0.001836298907312698,
       "n_searches": 555
     },
     {
@@ -55,7 +55,7 @@
       "params": {
         "num_simulations": 2000,
         "exploration_const": 2.0,
-        "p": 8.0,
+        "p": 32.0,
         "uncertainty_budget": 0.2,
         "gamma": 0.99,
         "rollout_depth": 100,
@@ -63,8 +63,8 @@
         "final_action": "most_visited",
         "uncertainty_type": "tv"
       },
-      "mean_regret": 0.025791246508169264,
-      "regret_se": 0.0025657844681797335,
+      "mean_regret": 0.039366769101609814,
+      "regret_se": 0.0023012766947498138,
       "n_searches": 555
     }
   ]
