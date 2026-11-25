@@ -1,0 +1,58 @@
+{
+  "env": "frozen_lake",
+  "algo": "stochastic-power-uct",
+  "num_simulations": 32,
+  "thetas_plan": [
+    0.5
+  ],
+  "thetas_exec": [
+    0.7
+  ],
+  "top": [
+    {
+      "rank": 1,
+      "params": {
+        "num_simulations": 32,
+        "exploration_const": 1.0,
+        "p": Infinity,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.04107847462957771,
+      "regret_se": 0.0017273607653739852,
+      "n_searches": 795
+    },
+    {
+      "rank": 2,
+      "params": {
+        "num_simulations": 32,
+        "exploration_const": 1.0,
+        "p": 16.0,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.041261616028991484,
+      "regret_se": 0.0017098188441333857,
+      "n_searches": 795
+    },
+    {
+      "rank": 3,
+      "params": {
+        "num_simulations": 32,
+        "exploration_const": 1.0,
+        "p": 4.0,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.04127098669200495,
+      "regret_se": 0.0016970230779973223,
+      "n_searches": 795
+    }
+  ]
+}

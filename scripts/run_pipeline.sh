@@ -17,13 +17,17 @@ ALGOS="${ALGOS:-uct stochastic-power-uct gs-power-uct gsf-power-uct robust-uct g
 SIMS="${SIMS:-100}"
 EPS="${EPS:-none}"   # "none" = eps tuned with the other hyper-parameters
 WORKERS="${WORKERS:-$(nproc)}"
-LOG_DIR="experiments/logs"
+P_VALUES="${P_VALUES:-none}"
+TUNE_ROOT="${TUNE_ROOT:-experiments/tune_config}"
+RUN_ROOT="${RUN_ROOT:-experiments/results}"
+LOG_DIR="${LOG_DIR:-experiments/logs}"
 mkdir -p "$LOG_DIR"
 
 for ENV in $ENVS; do
   for ALGO in $ALGOS; do
     for B in $SIMS; do
      for E in $EPS; do
+      for P in $P_VALUES; do
       NAME="${ENV}_${ALGO}_sims${B}"
       ARGS=(--env "$ENV" --algo "$ALGO" --sims "$B" --workers "$WORKERS")
       if [ "$E" != "none" ]; then
@@ -31,18 +35,33 @@ for ENV in $ENVS; do
         ARGS+=(--eps "$E")
       fi
 
+      if [ "$P" != "none" ]; then
+        NAME="${NAME}_p${P}"
+        ARGS+=(--power "$P")
+      fi
+      ARGS+=(--tune-root "$TUNE_ROOT")
+      if [ -n "${THETA_PLAN:-}" ]; then
+        read -r -a PLAN_VALUES <<< "$THETA_PLAN"
+        ARGS+=(--theta-plan "${PLAN_VALUES[@]}")
+      fi
+      if [ -n "${THETA_EXEC:-}" ]; then
+        read -r -a EXEC_VALUES <<< "$THETA_EXEC"
+        ARGS+=(--theta-exec "${EXEC_VALUES[@]}")
+      fi
+
       if [ -z "${SKIP_TUNE:-}" ]; then
-        echo "================ tune | $ENV | $ALGO | sims $B | eps $E ================"
+        echo "================ tune | $ENV | $ALGO | sims $B | eps $E | p $P ================"
         python experiments/tune.py "${ARGS[@]}" 2>&1 | tee "$LOG_DIR/${NAME}_tune.log"
       fi
 
-      echo "================ run  | $ENV | $ALGO | sims $B | eps $E ================"
-      python experiments/run.py "${ARGS[@]}" 2>&1 | tee "$LOG_DIR/${NAME}_run.log"
+      echo "================ run  | $ENV | $ALGO | sims $B | eps $E | p $P ================"
+      python experiments/run.py "${ARGS[@]}" --run-root "$RUN_ROOT" 2>&1 | tee "$LOG_DIR/${NAME}_run.log"
+      done
      done
     done 
   done 
 done
-echo "pipeline done: envs [$ENVS], algos [$ALGOS], sims [$SIMS], eps [$EPS]"
+echo "pipeline done: envs [$ENVS], algos [$ALGOS], sims [$SIMS], eps [$EPS], p [$P_VALUES]"
 
 
 

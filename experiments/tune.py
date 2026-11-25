@@ -25,10 +25,12 @@ ALGO_DIRS = {"uct": "uct", "stochastic-power-uct": "st_power_uct",
              "robust-uct": "robust_uct", "gs-robust-uct": "gs_robust_uct", "gsf-robust-uct": "gs_robust_uct_f"}
 
 
-def result_dir(root: str, algo: str, env: str, sims: int, eps: float | None = None) -> str:
+def result_dir(root: str, algo: str, env: str, sims: int, eps: float | None = None, p: float | None = None) -> str:
     """<root>/<algo folder>/<env>/sims<sims>[/eps<eps>]: the layout of both tune_config/ and results/."""
     out = os.path.join(root, ALGO_DIRS.get(algo, algo.replace("-", "_")), env, f"sims{sims}")
-    return out if eps is None else os.path.join(out, f"eps{eps:g}")
+    if eps is not None:
+        out = os.path.join(out, f"eps{eps:g}")
+    return out if p is None else os.path.join(out, f"p{p:g}")
 
 # ---------------------------------------------------------------- settings
 
@@ -77,11 +79,15 @@ def set_state(env, state: int, t: int = 0) -> None:
 
 # ---------------------------------------------------------------- configs
 
-def make_configs(algo: str, sims: int, eps: float | None = None) -> list[dict]:
+def make_configs(algo: str, sims: int, eps: float | None = None, p: float | None = None) -> list[dict]:
     """Every combination of the searched hyper-parameters that this planner's config has (uncertainty_budget fixed
     to eps when given)."""
     fields = PLANNERS[algo].config_cls.__dataclass_fields__
     space = SEARCH_SPACE if eps is None else {**SEARCH_SPACE, "uncertainty_budget": [eps]}
+    if p is not None:
+        if "p" not in fields or not p > 0:
+            raise ValueError(f"{algo} requires a positive power parameter for --power")
+        space = {**space, "p": [p]}
     searched = {name: values for name, values in space.items() if name in fields}
     fixed = {name: value for name, value in FIXED.items() if name in fields}
 
@@ -190,9 +196,10 @@ def rank(summary: pd.DataFrame) -> pd.DataFrame:
 
 # ---------------------------------------------------------------- tuning
 
-def tune(env: str, algo: str, sims: int, workers: int, eps: float | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
+def tune(env: str, algo: str, sims: int, workers: int, eps: float | None = None,
+         p: float | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Returns (all searches, ranked results)."""
-    configs = dict(enumerate(make_configs(algo, sims, eps)))
+    configs = dict(enumerate(make_configs(algo, sims, eps, p)))
     truth = solve_models(env)
 
     # round 1: every config
@@ -221,8 +228,8 @@ def top_configs(results: pd.DataFrame) -> list[dict]:
 
 
 def save(env: str, algo: str, sims: int, searches: pd.DataFrame, results: pd.DataFrame,
-         eps: float | None = None) -> str:
-    out_dir = result_dir(OUT, algo, env, sims, eps)
+         eps: float | None = None, p: float | None = None, out: str = OUT) -> str:
+    out_dir = result_dir(out, algo, env, sims, eps, p)
     os.makedirs(out_dir, exist_ok=True)
     searches.to_csv(os.path.join(out_dir, "searches.csv"), index=False)
     results.sort_values("rank").to_csv(os.path.join(out_dir, "results.csv"), index=False)
@@ -234,6 +241,18 @@ def save(env: str, algo: str, sims: int, searches: pd.DataFrame, results: pd.Dat
     return out_dir
 
 
+def add_theta_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--theta-plan", type=float, nargs="+", help="override the nominal models for this environment")
+    parser.add_argument("--theta-exec", type=float, nargs="+", help="override the execution models for this environment")
+
+
+def apply_theta_args(args: argparse.Namespace) -> None:
+    if args.theta_plan is not None:
+        THETAS[args.env] = args.theta_plan
+    if args.theta_exec is not None:
+        EXEC_THETAS[args.env] = args.theta_exec
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--env", required=True, choices=sorted(ENVS))
@@ -242,10 +261,14 @@ def main() -> None:
     parser.add_argument("--workers", type=int, default=os.cpu_count())
     parser.add_argument("--eps", type=float, default=None,
                         help="fix uncertainty_budget to this value (output in sims<N>/eps<eps>/); default: tune it")
+    parser.add_argument("--power", type=float, help="fix p to this value, including inf")
+    parser.add_argument("--tune-root", default=OUT)
+    add_theta_args(parser)
     args = parser.parse_args()
+    apply_theta_args(args)
 
-    searches, results = tune(args.env, args.algo, args.sims, args.workers, args.eps)
-    out_dir = save(args.env, args.algo, args.sims, searches, results, args.eps)
+    searches, results = tune(args.env, args.algo, args.sims, args.workers, args.eps, args.power)
+    out_dir = save(args.env, args.algo, args.sims, searches, results, args.eps, args.power, args.tune_root)
 
     best = results[results["rank"] <= TOP_K].sort_values("rank")
     columns = ["rank", "exploration_const", "p", "uncertainty_budget", "mean_regret", "regret_se", "n_searches"]

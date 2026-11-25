@@ -1,0 +1,2 @@
+group,config_id,theta_plan,theta_exec,num_simulations,exploration_const,p,uncertainty_budget,gamma,rollout_depth,max_depth,final_action,uncertainty_type,success_rate,mean_reward,mean_disc_reward,mean_regret_true,mean_regret,opt_rate,mean_steps,time_per_search,n_seeds,n_episodes,success_se,reward_se,disc_reward_se,regret_true_se
+0.05,robust-uct,0.3,0.6,16,2.0,8.0,0.05,0.99,100,50,most_visited,tv,0.005,0.005,0.001905235590522749,0.02122546522807155,0.025690288267431895,0.25453457165349874,32.2,0.008401171130327352,100,200,0.005,0.005,0.001905235590522749,0.0006928998789500114

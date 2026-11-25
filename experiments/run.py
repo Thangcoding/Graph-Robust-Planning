@@ -31,14 +31,16 @@ KEYS = ["group", "config_id", "theta_plan", "theta_exec"]   # one row of summary
 
 # ---------------------------------------------------------------- inputs
 
-def load_best_configs(env: str, algo: str, sims: int, eps: float | None = None) -> list[dict]:
+def load_best_configs(env: str, algo: str, sims: int, eps: float | None = None,
+                      p: float | None = None, tune_root: str = tune.OUT) -> list[dict]:
     """[{group, config_id, params}]: the single rank-1 config of tune.py (group = its uncertainty_budget, 0 for a
     non-robust planner)."""
-    path = os.path.join(tune.result_dir(tune.OUT, algo, env, sims, eps), "top3.json")
+    path = os.path.join(tune.result_dir(tune_root, algo, env, sims, eps, p), "top3.json")
     if not os.path.exists(path):
         eps_arg = "" if eps is None else f" --eps {eps:g}"
+        power_arg = "" if p is None else f" --power {p:g}"
         raise SystemExit(f"{path} not found: run first  python experiments/tune.py --env {env} --algo {algo} "
-                         f"--sims {sims}{eps_arg}")
+                         f"--sims {sims}{eps_arg}{power_arg} --tune-root {tune_root}")
     with open(path) as f:
         best = next(entry for entry in json.load(f)["top"] if entry["rank"] == 1)
     return [{"group": tune.group_of(best["params"]), "config_id": algo, "params": best["params"]}]
@@ -150,14 +152,19 @@ def main() -> None:
     parser.add_argument("--sims", type=int, default=100, help="simulations per search (must have been tuned)")
     parser.add_argument("--workers", type=int, default=os.cpu_count())
     parser.add_argument("--eps", type=float, default=None, help="run the config tuned with this fixed eps")
+    parser.add_argument("--power", type=float, help="load the config tuned with this fixed p")
+    parser.add_argument("--tune-root", default=tune.OUT)
+    parser.add_argument("--run-root", default=OUT)
+    tune.add_theta_args(parser)
     args = parser.parse_args()
+    tune.apply_theta_args(args)
 
-    configs = load_best_configs(args.env, args.algo, args.sims, args.eps)
+    configs = load_best_configs(args.env, args.algo, args.sims, args.eps, args.power, args.tune_root)
     truth = solve_models(args.env, configs)
     episodes = run_all(args.env, args.algo, configs, args.workers, truth)
     summary = summarize(episodes)
 
-    out_dir = tune.result_dir(OUT, args.algo, args.env, args.sims, args.eps)
+    out_dir = tune.result_dir(args.run_root, args.algo, args.env, args.sims, args.eps, args.power)
     os.makedirs(out_dir, exist_ok=True)
     episodes.to_csv(os.path.join(out_dir, "episodes.csv"), index=False)
     summary.to_csv(os.path.join(out_dir, "summary.csv"), index=False)

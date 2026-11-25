@@ -1,0 +1,2 @@
+group,config_id,theta_plan,theta_exec,num_simulations,exploration_const,p,gamma,rollout_depth,max_depth,final_action,success_rate,mean_reward,mean_disc_reward,mean_regret_true,mean_regret,opt_rate,mean_steps,time_per_search,n_seeds,n_episodes,success_se,reward_se,disc_reward_se,regret_true_se
+0.0,stochastic-power-uct,0.2,0.3,16,2.0,8.0,0.99,100,50,most_visited,0.275,0.275,0.2724696473722064,0.01908858750348588,0.020228447217053736,0.7319384018759019,2.34,0.008306227813142891,100,200,0.030463589792247114,0.030463589792247114,0.03026930246749852,0.0013736408067883106
