@@ -1,0 +1,58 @@
+{
+  "env": "gambler",
+  "algo": "gsf-power-uct",
+  "num_simulations": 128,
+  "thetas_plan": [
+    0.6
+  ],
+  "thetas_exec": [
+    0.6
+  ],
+  "top": [
+    {
+      "rank": 1,
+      "params": {
+        "num_simulations": 128,
+        "exploration_const": 0.5,
+        "p": Infinity,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.001673870555515238,
+      "regret_se": 0.0005804962165147985,
+      "n_searches": 105
+    },
+    {
+      "rank": 2,
+      "params": {
+        "num_simulations": 128,
+        "exploration_const": 1.0,
+        "p": Infinity,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.0024600895809734325,
+      "regret_se": 0.0006464633445909535,
+      "n_searches": 105
+    },
+    {
+      "rank": 3,
+      "params": {
+        "num_simulations": 128,
+        "exploration_const": 2.0,
+        "p": Infinity,
+        "gamma": 0.99,
+        "rollout_depth": 100,
+        "max_depth": 50,
+        "final_action": "most_visited"
+      },
+      "mean_regret": 0.0026857149411804,
+      "regret_se": 0.000735136156243925,
+      "n_searches": 105
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+% Requires booktabs.
+\begin{table}[htbp]
+\centering
+\caption{Experiment 6 on Gambler at $N=2000$ and $\theta_{\mathrm{plan}}=0.7$. For each seed, rewards are averaged equally over $\theta_{\mathrm{exec}}=0.1,\ldots,0.8$. Standard errors are computed across 100 seed averages. Bold marks the highest mean for each planner.}
+\label{tab:exp6-gambler}
+\begin{tabular}{lrrc}
+\toprule
+Planner & $p$ & $\epsilon$ & Mean reward $\pm$ SE \\
+\midrule
+GS-Robust-UCT & 1 & 0.1 & 0.4606 $\pm$ 0.0218 \\
+ & 4 & 0.05 & \textbf{0.4662 $\pm$ 0.0168} \\
+ & 8 & 0.05 & 0.4512 $\pm$ 0.0133 \\
+ & 16 & 0.05 & 0.4512 $\pm$ 0.0115 \\
+ & 32 & 0.05 & 0.4581 $\pm$ 0.0088 \\
+ & $\infty$ & 0.05 & 0.4494 $\pm$ 0.0078 \\
+\midrule
+GSF-Robust-UCT+ & 1 & 0.05 & 0.4662 $\pm$ 0.0207 \\
+ & 4 & 0.05 & 0.4662 $\pm$ 0.0205 \\
+ & 8 & 0.05 & 0.4606 $\pm$ 0.0204 \\
+ & 16 & 0.05 & 0.4594 $\pm$ 0.0183 \\
+ & 32 & 0.05 & 0.4338 $\pm$ 0.0200 \\
+ & $\infty$ & 0.05 & \textbf{0.4669 $\pm$ 0.0133} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Experiment 6 on Frozen Lake at $N=2000$ and $\theta_{\mathrm{plan}}=0.1$. For each seed, rewards are averaged equally over $\theta_{\mathrm{exec}}=0.1,\ldots,0.8$. Standard errors are computed across 100 seed averages. Bold marks the highest mean for each planner.}
+\label{tab:exp6-frozen-lake}
+\begin{tabular}{lrrc}
+\toprule
+Planner & $p$ & $\epsilon$ & Mean reward $\pm$ SE \\
+\midrule
+GS-Robust-UCT & 1 & 0.1 & 0.2913 $\pm$ 0.0111 \\
+ & 4 & 0.05 & 0.3906 $\pm$ 0.0123 \\
+ & 8 & 0.5 & \textbf{0.4875 $\pm$ 0.0110} \\
+ & 16 & 0.3 & 0.4681 $\pm$ 0.0111 \\
+ & 32 & 0.3 & 0.4431 $\pm$ 0.0100 \\
+ & $\infty$ & 0.5 & 0.4144 $\pm$ 0.0088 \\
+\midrule
+GSF-Robust-UCT+ & 1 & 0.1 & 0.2650 $\pm$ 0.0111 \\
+ & 4 & 0.5 & 0.3425 $\pm$ 0.0111 \\
+ & 8 & 0.3 & 0.4131 $\pm$ 0.0134 \\
+ & 16 & 0.3 & 0.4088 $\pm$ 0.0126 \\
+ & 32 & 0.2 & \textbf{0.4369 $\pm$ 0.0122} \\
+ & $\infty$ & 0.3 & 0.1837 $\pm$ 0.0088 \\
+\bottomrule
+\end{tabular}
+\end{table}
